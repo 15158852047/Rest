@@ -1,0 +1,416 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Home</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="{{ url_for('static',filename='assets/css/main.css') }}" />
+ <script src="{{ url_for('static',filename='login/js/img_ver.js') }}"></script>
+<script src="{{ url_for('static',filename='login/js/jquery-1.10.2.js') }}"></script>
+
+    <style type="text/css">
+     #close{
+        position: absolute;
+         top: 1px;
+         left: 380px;
+         height:20px;
+         width: 20px;
+         background-image: url("{{ url_for('static',filename='login/Close.png') }}");
+     }
+.slider-btn{position:absolute;width:44px;height:44px;left:0;top:-7px;z-index:12;
+    cursor:pointer;background-image:url("{{ url_for('static',filename='login/sprite.3.2.0.png')}}");
+    background-position:0 -84px;transition:inherit}
+.ver-tips{position:absolute;left:0;bottom:-22px;background:rgba(255,255,255,.9);
+    height:22px;line-height:22px;font-size:12px;width:100%;margin:0;text-align:left;padding:0 8px;transition:all .4s}
+.slider-tips{bottom:0}
+.ver-tips i{display:inline-block;width:22px;height:22px;vertical-align:top;
+    background-image:url("{{ url_for('static',filename='login/sprite.3.2.0.png')}}");background-position:-4px -1229px}
+.ver-tips span{display:inline-block;vertical-align:top;line-height:22px;color:#455}
+.active-tips{display:block}
+.hidden{display:none}
+.re-btn{position:absolute;left:0;bottom:0;height:28px;padding:0 16px}
+.re-btn a{display:inline-block;width:14px;height:14px;margin:7px 0;
+    background-image:url("{{ url_for('static',filename='login/sprite.3.2.0.png')}}");background-position:0 -1179px;cursor:pointer}
+.re-btn a:hover{background-position:0 -1193px}
+ </style>
+<style>
+        #loginmain{
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0px;
+            top:0px
+        }
+        .bxs-row {
+            margin-bottom:12px;
+            width: 300px;
+        }
+        .logo-box {
+            width:410px;
+            margin:200px 0 0 650px;
+            border:1px solid #e5e5e5;
+            border-radius:4px;
+            box-shadow:0 4px 18px rgba(0,0,0,0.2);
+            overflow:hidden;
+            height:350px;
+            position: relative;
+            background: #ffffff;
+        }
+        .login {
+            position:absolute;
+            width:320px;left:0;
+            top:0;
+            padding: 42px 42px 36px;
+            transition:all 0.8s;
+        }
+        .username,.password,.btn {
+            height: 44px;
+            width: 300px;
+            padding: 0 10px;
+            border: 1px solid #9da3a6;
+            background: #fff;
+            text-overflow: ellipsis;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -khtml-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            color: #000;
+            font-size: 1em;
+            font-family: Helvetica,Arial,sans-serif;
+            font-weight: 400;
+            direction: ltr;
+            font-size:13px;
+        }
+        .submit {
+            background-color: #0070ba;
+            color:#fff;
+            border:1px solid #0070ba;
+        }
+        .submit:hover {
+            background-color:#005ea6;
+        }
+        .verBox {
+            position:absolute;
+            width:100%;
+            text-align:center;
+            left:404px;
+            top:0;
+            opacity:0;
+            transition:all 0.8s;
+            padding-top:55px;
+        }
+        .err {
+            margin:12px 0 0;
+            line-height:12px;
+            height:12px;
+            font-size:12px;
+            color:red;
+        }
+</style>
+  {% block head %}
+ 
+ {% endblock %}   
+</head>
+<body class="index">
+<div id="page-wrapper">
+
+	<!-- Header -->
+		<header id="header" class="alt">
+			<nav id="nav">
+				<ul>
+                    <li class="current"><a href="{{ url_for('user.index') }}" onclick="s()">首页</a></li>
+                    <li class="current"><a href="{{ url_for('user.files') }}">查看文件</a></li>
+					<li class="submenu">
+						<a href="#">软件相关</a>
+						<ul>
+							<li class="submenu">
+								<a href="#">Delphi</a>
+								<ul>
+									<li><a href="#">Delphi</a></li>
+									<li><a href="#">Com通讯</a></li>
+									<li><a href="#">GPIB通讯</a></li>
+									<li><a href="#">UDP打洞</a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#">Python</a>
+								<ul>
+									<li><a href="#">Python</a></li>
+									<li><a href="#">Python web</a></li>
+									<li><a href="#">机器学习</a></li>
+									<li><a href="#">深度学习</a></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+                    <li class="submenu">
+						<a href="#">游戏相关</a>
+						<ul>
+							<li><a href="#">流放之路</a></li>
+							<li><a href="#">梦幻西游</a></li>
+							<li><a href="#">英雄联盟</a></li>
+						</ul>
+					</li>
+                    <li class="current"><a href="#" onclick="s()">联系我</a></li>
+                    {% if user %}
+                    <li class="submenu">
+						<a href="#">私人功能</a>
+						<ul>
+							<li><a href="#">小说</a></li>
+							<li><a href="#">音乐</a></li>
+							<li><a href="{{ url_for('user.beforeadd') }}">添加文章</a></li>
+                            <li><a href="{{ url_for('user.upfile') }}">上传文件</a></li>
+                            <li><a href="#">查看回复</a></li>
+						</ul>
+					</li>
+                    {% else %}
+                        <li class="current"><a href="#" id="login">登录</a></li>
+                    {% endif %}
+				</ul>
+			</nav>
+		</header>
+
+	<!-- Banner -->
+		<section id="banner">
+
+			<!--
+				".inner" is set up as an inline-block so it automatically expands
+				in both directions to fit whatever's inside it. This means it won't
+				automatically wrap lines, so be sure to use line breaks where
+				appropriate (<br />).
+			-->
+			<div class="inner">
+
+				<header>
+					<h2>个人微博</h2>
+				</header>
+				<p><!--[-->This is<!--]--> <!--[-->My First<!--]-->
+				<br />
+				<!--[-->blog!!<!--]-->
+				<br />
+				<!--[-->by <a href="#">Yuhang Jin</a>.<!--]--></p>
+
+			</div>
+
+		</section>
+
+	<!-- Main -->
+{% block main %}
+
+{% endblock %}
+	<!-- Footer -->
+		<footer id="footer">
+            <ul class="icons">
+				<li><a  class="icon circle fa-qq" title="QQ:524027465"><span class="label">QQ</span></a></li>
+				<li><a class="icon circle fa-weixin" title="微信:j524027465"><span class="label">微信</span></a></li>
+				<li><a class="icon circle fa-github" title="GitHub:15158852047"><span class="label">Github</span></a></li>
+				<li><a class="icon circle fa-phone" title="手机:15158852047"><span class="label">phone</span></a></li>
+			</ul>
+        <br>
+            <br>
+			<ul class="copyright">
+				<li>Copyright &copy; 2018 By Yuhang Jin.</li>
+			</ul>
+
+		</footer>
+
+</div>
+
+
+<!-- Scripts -->
+<script src="{{ url_for('static',filename='assets/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/jquery.dropotron.min.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/jquery.scrolly.min.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/jquery.scrollgress.min.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/skel.min.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/util.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/main.js') }}"></script>
+<script src="{{ url_for('static',filename='main/myfunc.js') }}"></script>
+<script>
+  function s(){
+        var c = window.document.body.scrollHeight;
+        window.scroll(0,c);
+        }
+  {% if user %}
+
+  {% else %}
+     var login = document.getElementById('login');
+     var canopen = true;
+     login.onclick = function  () {
+        if (canopen) {
+          canopen = false;
+
+          var main = document.createElement('div');
+          main.setAttribute('id','loginmain');
+          document.body.appendChild(main);
+
+
+          var div = document.createElement('div');
+          div.setAttribute('class','logo-box');
+          main.appendChild(div);
+
+          var close = document.createElement('div');
+          close.setAttribute('id','close');
+          close.onclick = function () {
+              var l = document.getElementById('loginmain');
+              canopen = true ;
+              document.body.removeChild(l);
+          }
+          div.appendChild(close);
+
+          var div1 = document.createElement('div');
+          div1.setAttribute('class','login');
+          div.appendChild(div1);
+
+          var div2 = document.createElement('div');
+          div2.setAttribute('class','bxs-row');
+          div2.setAttribute('style','text-align:center;');
+          div1.appendChild(div2);
+          var img = document.createElement('img');
+          img.setAttribute('src',"{{ url_for('static',filename='login/logo.jpg') }}")
+          img.setAttribute('style','width:72px');
+          div2.appendChild(img);
+          var span = document.createElement('span');
+          span.setAttribute('class','tips');
+          span.setAttribute('style','color:red;');
+          span.innerText = '忍住不哭来段口技';
+          div2.appendChild(span);
+
+          var div3 = document.createElement('div');
+          div3.setAttribute('class','bxs-row');
+          div1.appendChild(div3);
+          var input1 = document.createElement('input');
+          input1.setAttribute('type','text');
+          input1.setAttribute('class','username');
+          input1.setAttribute('placeholder','用户名');
+          div3.appendChild(input1);
+          var p1 = document.createElement('p');
+          p1.setAttribute('class','err err-username');
+          div3.appendChild(p1);
+
+          var div4 = document.createElement('div');
+          div4.setAttribute('class','bxs-row');
+          div1.appendChild(div4);
+          var input2 = document.createElement('input');
+          input2.setAttribute('type','password');
+          input2.setAttribute('class','password');
+          input2.setAttribute('placeholder','密码');
+          input2.onkeydown = function (e) {
+                if (e.keyCode == 13) {
+                    var p = document.getElementById('btn');
+                    p.click();
+                }
+            }
+          div4.appendChild(input2);
+          var p2 = document.createElement('p');
+          p2.setAttribute('class','err err-password');
+          div3.appendChild(p2);
+
+          var div5 = document.createElement('div');
+          div5.setAttribute('class','bxs-row');
+          div1.appendChild(div5);
+          var input3 = document.createElement('input');
+          input3.setAttribute('type','submit');
+          input3.setAttribute('class','submit btn');
+          input3.setAttribute('id','btn');
+          input3.setAttribute('value','登录');
+          div5.appendChild(input3);
+
+          var div6 = document.createElement('div');
+          div6.setAttribute('class','verBox');
+          div.appendChild(div6);
+          var div7 = document.createElement('div');
+          div7.setAttribute('id','imgVer');
+          div7.setAttribute('style','display:inline-block;');
+          div6.appendChild(div7);
+
+          imgVer({
+                el:'$("#imgVer")',
+                width:'260',
+                height:'116',
+                img:[
+                    '{{ url_for("static",filename="login/ver.png") }}',
+                    '{{ url_for("static",filename="login/ver-1.png") }}',
+                    '{{ url_for("static",filename="login/ver-2.png") }}',
+                    '{{ url_for("static",filename="login/ver-3.png") }}'
+                ],
+                success:function () {
+                    //alert('执行登录函数');
+                    $(".login").css({
+                        "left":"0",
+                        "opacity":"1"
+                    });
+                    $(".verBox").css({
+                        "left":"404px",
+                        "opacity":"0"
+                    });
+                    var username = $(".username").val();
+                    var password = $(".password").val();
+                    var form = new FormData();
+                    form.append('name',username);
+                    form.append('pass',password);
+                    $.ajax({
+                        url:"{{ url_for('user.login') }}",
+                        type:'POST',
+                        data:form,
+                        dataType:'json',
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success :
+                        function (data) {
+                            if (data.code == 200) {
+                               var main = document.getElementById('loginmain');
+                               document.body.removeChild(main);
+                               window.location.href = "{{  url_for('user.index') }}";
+                            }
+                            else {
+                                $(".tips").html('你是不是不知道账号密码！？？？');
+                                $("#logo").attr("src",'{{ url_for("static",filename="login/login-err.png") }}');
+
+                            }
+                        }
+                    })
+
+
+                },
+                error:function () {
+                    //alert('错误什么都不执行')
+                }
+            });
+
+            $(".submit").on('click',function () {
+                if($(".username").val() == '') {
+                    // $(".err-username").html('杂种！！你用户名呢！？？？');
+                    $(".tips").html('老兄！！你用户名呢！？？？');
+                    $("#logo").attr("src",'{{ url_for("static",filename="login/images/null-username.jpg") }}')
+                } else if($(".password").val() == '') {
+                    // $(".err-password").html('畜生！！你密码呢！？？？');
+                    $(".tips").html('老兄！！你密码呢！？？？');
+                    $("#logo").attr("src",'{{ url_for("static",filename="login/images/null-password.jpg") }}')
+                } else {
+                    $(".login").css({
+                        "left":"-404px",
+                        "opacity":"0"
+                    });
+                    $(".verBox").css({
+                        "left":"0",
+                        "opacity":"1"
+                    })
+                }
+            })
+        }
+     }
+  {% endif %}
+
+
+</script>
+</body>
+</html>

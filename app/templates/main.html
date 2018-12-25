@@ -1,0 +1,355 @@
+{% extends 'index.html' %}
+{% block head %}
+<script type="application/x-javascript">
+addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+</script>
+<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+<link href="{{ url_for('static',filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" media="all" />
+<style type="text/css">
+    ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+}
+
+ul.pagination li a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+</style>
+{% endblock %}
+{% block main %}
+   <div class="banner-bottom" id="wind">
+		<div class="container">
+            <div class="news">
+					<div class="news-grids">
+						<div class="col-md-8 news-grid-left">
+							<h3>最新发布</h3>
+							<ul class="myul">
+                            {% if messages %}
+                                {% for message in messages %}
+                                 <li>
+									<div class="news-grid-left1">
+										<a href="#" class="imga" ><img src="{{ url_for('static',filename='images/16.jpg') }}" va="{{ message.id }}" alt=" " class="img-responsive" /></a>
+                                    </div>
+									<div class="news-grid-right1">
+										<h4><a href="#" va="{{ message.id }}" class="aaa">{{ message.name }}</a></h4>
+										<h5>{{ message.First }} |  {{ message.Second }}<label>|</label>{{ message.time }}</h5>
+										<p>{{ message.info }}</p>
+									</div>
+									<div class="clearfix"> </div>
+								</li>
+                                {% endfor %}
+                            {% else %}
+                                <h1>并没有文章</h1>
+
+                            {% endif %}
+							</ul>
+
+                            <div class="page">
+                                <center>
+                                <ul class="pagination">
+                                  <li><a href="#">«</a></li>
+                                {% if allcount > 8 %}
+                                  {% for i in range(8) %}
+                                    <li><a href="#" >{{ i+1 }}</a></li>
+                                  {% endfor %}
+                                {% else %}
+                                  {% for i in range(allcount) %}
+                                    <li><a href="#" >{{ i+1 }}</a></li>
+                                  {% endfor %}
+                                {% endif %}
+                                  <li><a href="#">»</a></li>
+                                </ul>
+                                </center>
+                            </div>
+
+						</div>
+
+
+						<div class="col-md-4 news-grid-right">
+							<div class="news-grid-rght1">
+							<!-- Nav tabs -->
+							  <ul class="nav nav-tabs" role="tablist">
+								<li role="presentation" class="active"><a class="high" href="#home" aria-controls="home" role="tab" data-toggle="tab">天气预报</a></li>
+								<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">杭州</a></li>
+							  </ul>
+
+							  <!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" class="tab-pane active london" id="home">
+										<ul>
+                                            {% for i in tianqi %}
+                                                 <li>
+												<h4>{{ i.time }}</h4>
+
+												{% if i.tianqi == '大雨' %}
+                                                    <span class="dayu"></span>
+                                                {%  elif i.tianqi == '雨' :%}
+                                                    <span class="xiaoyu"></span>
+                                                {%  elif 'i.tianqi == 晴' :%}
+                                                    <span class="sun"></span>
+                                                 {%  elif i.tianqi == '风' :%}
+                                                    <span class="taifeng"></span>
+                                                {%  elif i.tianqi == '雪' :%}
+                                                    <span class="xue"></span>
+                                                 {%  else:%}
+                                                    <span></span>
+                                                {% endif %}
+												<p>{{ i.low }}°-{{ i.high }}°</p>
+											    </li>
+                                            {% endfor %}
+											<div class="clearfix"> </div>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="news-grid-rght2">
+								<h3>全站搜索</h3>
+								<p>请在下方输入您所要搜索的关键字！！</p>
+								<form>
+									<input type="text" value="输入搜索关键字！" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '输入搜索关键字!';}">
+									<input type="submit" value="搜索">
+								</form>
+							</div>
+						</div>
+						<div class="clearfix"> </div>
+					</div>
+				</div>
+
+		</div>
+	</div>
+    <br><br>
+    <script src="{{ url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/cl.js')}}"></script>
+    <script>
+    var count = {{ allcount }};
+    var imga = document.getElementsByClassName('img-responsive');
+
+    for (var i=0;i<imga.length;i++){
+        imga[i].onclick =   function  () {
+            var id = this.getAttribute('va');
+            $.ajax({
+                url:{{ url_for('user.readmsg',mid='') }}+id,
+                type:'get',
+                success:
+                function (data) {
+                    var wind = document.getElementById('wind');
+                    wind.innerHTML = '';
+                    var center = document.createElement('center');
+                    wind.appendChild(center);
+                    var h1 = document.createElement('h1');
+                    h1.innerText = data['title'];
+                    center.appendChild(h1);
+
+                    var h5 = document.createElement('h5');
+                    h5.innerHTML = '<br>'+data['First'] + '  <label>|</label> ' + data['Second'] + '  <label>|</label> ' + data['time']+'<hr><br>';
+                    center.appendChild(h5);
+
+                    var d = document.createElement('div');
+                    d.innerHTML = data['html'];
+                    wind.appendChild(d);
+                }
+            })
+        }
+    }
+    var aaa = document.getElementsByClassName('aaa');
+     for (var i=0;i<aaa.length;i++){
+        aaa[i].onclick = function  () {
+            var id = this.getAttribute('va');
+            $.ajax({
+                url:{{ url_for('user.readmsg',mid='') }}+id,
+                type:'get',
+                success:
+                function (data) {
+                    var wind = document.getElementById('wind');
+                    wind.innerHTML = '';
+                    var center = document.createElement('center');
+                    wind.appendChild(center);
+                    var h1 = document.createElement('h1');
+                    h1.innerText = data['title'];
+                    center.appendChild(h1);
+
+                    var h5 = document.createElement('h5');
+                    h5.innerHTML = '<br>'+data['First'] + '  <label>|</label> ' + data['Second'] + '  <label>|</label> ' + data['time']+'<hr><br>';
+                    center.appendChild(h5);
+
+                    var d = document.createElement('div');
+                    d.innerHTML = data['html'];
+                    wind.appendChild(d);
+                }
+            })
+        }
+    }
+
+    var as = document.getElementsByClassName('pagination')[0];
+    var lis = as.getElementsByTagName('a');
+    var ss = lis.length;
+    for (var i=1;i<lis.length-1;i++) {
+        lis[i].onclick = function () {
+            if (this.className == '' ){
+                var s = as.getElementsByClassName('active')[0];
+                s.removeAttribute('class');
+                this.setAttribute('class','active');
+                $.ajax({
+                    url:'{{ url_for("user.index") }}',
+                    type:'post',
+                    datatype:'json',
+                    data:JSON.stringify({'page':this.innerText}),
+                    cache:false,
+                    processData:false,
+                    contentType: 'application/json; charset=UTF-8',
+                    success:
+                    function (data) {
+                        var messages = data['messages'];
+                        var ul = document.getElementsByClassName('myul')[0];
+                        ul.innerHTML = '';
+                        for(var key in messages) {
+                            var one = messages[key];
+                            var li = document.createElement('li');
+                            ul.appendChild(li);
+
+                            var div1 = document.createElement('div');
+                            div1.setAttribute('class','news-grid-left1');
+                            li.appendChild(div1);
+
+                            var a1 = document.createElement('a');
+                            a1.setAttribute('href','#');
+                            a1.setAttribute('class','imga');
+                            div1.appendChild(a1);
+
+                            var im1 = document.createElement('img');
+                            im1.setAttribute('src',one[5]);
+                            im1.setAttribute('va',one[6]);
+                            im1.setAttribute('class','img-responsive');
+                            a1.appendChild(im1);
+
+                            var div2 = document.createElement('div');
+                            div2.setAttribute('class','news-grid-right1');
+                            li.appendChild(div2);
+
+                            var h4 = document.createElement('h4');
+                            div2.appendChild(h4);
+
+                            var a2 = document.createElement('a');
+                            a2.setAttribute('href','#');
+                            a2.setAttribute('va',one[6]);
+                            a2.setAttribute('class','aaa');
+                            a2.innerText = one[0];
+                            h4.appendChild(a2);
+
+                            var h5 = document.createElement('h5');
+                            h5.innerHTML = one[3]+' | '+one[4]+'<label>|</label>'+one[2]
+                            div2.appendChild(h5);
+
+                            var p1 = document.createElement('p');
+                            p1.innerText = one[1];
+                            div2.appendChild(p1);
+
+                            var div3 = document.createElement('div');
+                            div3.setAttribute('class','clearfix');
+                            li.appendChild(div3);
+                        }
+                       var imga = document.getElementsByClassName('img-responsive');
+                        for (var i=0;i<imga.length;i++){
+                            imga[i].onclick =  function  () {
+            var id = this.getAttribute('va');
+            $.ajax({
+                url:{{ url_for('user.readmsg',mid='') }}+id,
+                type:'get',
+                success:
+                function (data) {
+                    var wind = document.getElementById('wind');
+                    wind.innerHTML = '';
+                    var center = document.createElement('center');
+                    wind.appendChild(center);
+                    var h1 = document.createElement('h1');
+                    h1.innerText = data['title'];
+                    center.appendChild(h1);
+
+                    var h5 = document.createElement('h5');
+                    h5.innerHTML = '<br>'+data['First'] + '  <label>|</label> ' + data['Second'] + '  <label>|</label> ' + data['time']+'<hr><br>';
+                    center.appendChild(h5);
+
+                    var d = document.createElement('div');
+                    d.innerHTML = data['html'];
+                    wind.appendChild(d);
+                }
+            })
+        }
+                        }
+                        var aaa = document.getElementsByClassName('aaa');
+                         for (var i=0;i<aaa.length;i++){
+                            aaa[i].onclick =  function  () {
+            var id = this.getAttribute('va');
+            $.ajax({
+                url:{{ url_for('user.readmsg',mid='') }}+id,
+                type:'get',
+                success:
+                function (data) {
+                    var wind = document.getElementById('wind');
+                    wind.innerHTML = '';
+                    var center = document.createElement('center');
+                    wind.appendChild(center);
+                    var h1 = document.createElement('h1');
+                    h1.innerText = data['title'];
+                    center.appendChild(h1);
+
+                    var h5 = document.createElement('h5');
+                    h5.innerHTML = '<br>'+data['First'] + '  <label>|</label> ' + data['Second'] + '  <label>|</label> ' + data['time']+'<hr><br>';
+                    center.appendChild(h5);
+
+                    var d = document.createElement('div');
+                    d.innerHTML = data['html'];
+                    wind.appendChild(d);
+                }
+            })
+        }
+    }
+                    }
+                })
+            }
+        }
+    }
+
+    lis[0].onclick = function () {
+        var a = document.getElementsByClassName('active')[0];
+        var init = parseInt(a.innerText);
+        if (init > 1 ) {
+            lis[init].removeAttribute('class');
+            lis[init-1].setAttribute('class','active')
+        }
+    }
+
+
+    lis[lis.length-1].onclick = function () {
+        var a = document.getElementsByClassName('active')[0];
+        var init = parseInt(a.innerText);
+        if (init < ss-2 ) {
+            lis[init].removeAttribute('class');
+            lis[init+1].setAttribute('class','active')
+        }
+    }
+
+    window.onload = function () {
+        var as = document.getElementsByClassName('pagination')[0];
+        var lis = as.getElementsByTagName('a');
+        lis[1].setAttribute('class','active');
+    }
+    </script>
+{% endblock %}

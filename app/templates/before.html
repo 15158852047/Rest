@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>类型选择</title>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/zcity.css') }}">
+<style>
+    #subm{
+        cursor: pointer;
+        border: 1px solid #000000;
+        background: lightcoral;
+        width: 100px;
+        text-align: center;
+    }
+    #subm p{
+        margin-top: 6px ;
+    }
+    #info{
+        width: 300px;
+        height: 400px;
+    }
+    .zcityGroup .zcityItem .zcityItem-head:before{content:'';display:block;width:6px;height:6px;top:50%;margin-top:-3px;position:absolute;z-index:0;right:5px;
+background:url("{{ url_for('static',filename='images/dd.png') }}"); right center no-repeat;transition:all 0.3s;-moz-transition:all 0.3s;-webkit-transition:all 0.3s;-o-transition:all 0.3s;}
+</style>
+</head>
+<body>
+<center>
+<table class="demoTable">
+    <thead>
+        <tr>
+            <th class="td-04"><h6 class="title">请选择文档类型</h6></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+
+            <td class="td-04">
+                <!--zcityGroup start-->
+                <div class="zcityGroup" city-range="{'level_start':1,'level_end':2}"></div>
+                <!--zcityGroup end-->
+            </td>
+        </tr>
+    </tbody>
+</table>
+    <br>
+    请输入文章的标题：<input type="text" placeholder="请输入标题!" id="title">
+    <br>
+    <br>
+    请输入文章简介：<br>
+    <textarea placeholder="请输入简介!" id="info"></textarea>
+
+<div id="subm"><p>提交</p></div></center>
+
+<script type="text/javascript" src="{{ url_for('static',filename='js/jquery-1.9.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static',filename='js/zcity.js') }}"></script>
+
+
+<script type="text/javascript">
+zcityrun('.zcityGroup');
+var sub = document.getElementById('subm');
+sub.onclick = function () {
+    var Devides = document.getElementsByClassName('currentValue');
+    if (Devides[0].value=='' || Devides[1].value==''|| document.getElementById('title').value=='' || document.getElementById('info').value==''){
+        alert('这些内容都不能为空!!!!');
+    } else {
+    $.ajax({
+        url:"{{ url_for('user.beforeadd') }}",
+        data:JSON.stringify({'1':Devides[0].value,'2':Devides[1].value,'3':document.getElementById('title').value,'4':document.getElementById('info').value}),
+        type:"post",
+        datatype:"json",
+        cache:false,
+        processData:false,
+        contentType: 'application/json; charset=UTF-8',
+        success:
+        function (data) {
+            if (data['isok'] == 'yes') {
+                window.location.href = "{{ url_for('user.addmessage') }}";
+            }
+        }
+    })
+    }
+}
+</script>
+
+</body>
+</html>

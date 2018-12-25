@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<center>
+    <h1>{{ info }}</h1>
+    <a href="{{ url_for('user.index') }}">点我跳转</a>
+</center>
+<script type="text/javascript">
+　　function jumurl(){
+    {% if url == 1 %}
+　　window.location.href = "{{ url_for('user.index') }}";
+        {% elif url == 2 %}
+   window.location.href = "{{ url_for('user.lookfile') }}";
+      {% endif %}
+　　}
+　　setTimeout(jumurl,3000);
+</script>
+
+</body>
+</html>
